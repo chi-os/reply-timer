@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "reply-timer-v2",
+  "name": "reply-timer",
   "version": "0.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
