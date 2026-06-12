@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OP Reply Enforcer - Logic Flowchart</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        h1 { margin-bottom: 5px; }
+        p { margin-bottom: 30px; color: #7f8c8d; }
+        .mermaid-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 1400px;
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #e1e8ed;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>OP Reply Enforcer (reply-timer)</h1>
+    <p>Cascading Dual-Timer</p>
+
+    <div class="mermaid-container">
+        <div class="mermaid">
+        graph TD
+            classDef trigger fill:#34495e,stroke:#2c3e50,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+            classDef check fill:#f39c12,stroke:#d35400,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+            classDef action fill:#2980b9,stroke:#2574a9,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+            classDef db fill:#8e44ad,stroke:#71368a,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+            classDef endNode fill:#27ae60,stroke:#1e8449,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+            classDef errorNode fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+
+            %% 1. POST SUBMIT FLOW (LEFT)
+            subgraph T1 ["Trigger 1: New Post Created"]
+                P1["Event: PostSubmit"]:::trigger --> P2{"Check Exceptions? (Flair, Mods, Approved, Karma, Email)"}:::check
+                P2 -- "Yes (Exception met)" --> P3["Ignore Post"]:::errorNode
+                P2 -- "No" --> P4[("Write state 'waiting' to Redis")]:::db
+                P4 --> P5{"Is Timer 1 (Empty Post) enabled in Settings?"}:::check
+                P5 -- "No" --> P6["Track state only"]:::endNode
+                P5 -- "Yes" --> P7[("Start Timer 1 (Empty Post)")]:::db
+            end
+
+            %% 2. COMMENT CREATE FLOW (RIGHT)
+            subgraph T2 ["Trigger 2: Someone Comments"]
+                C1["Event: CommentCreate"]:::trigger --> C2{"Does state exist in Redis?"}:::check
+                C2 -- "No (Post not tracked)" --> C3["Ignore"]:::endNode
+                C2 -- "Yes" --> C4{"Is the author the OP?"}:::check
+                
+                C4 -- "Yes (OP replied)" --> C5[("Delete ALL timers & state")]:::db
+                C5 --> C6["Post is safe!"]:::endNode
+                
+                C4 -- "No (Community member)" --> C7{"Is state 'waiting'?"}:::check
+                C7 -- "No (Not first comment)" --> C8["Ignore"]:::endNode
+                C7 -- "Yes (First community comment!)" --> C9[("Write state 'community_replied'")]:::db
+                C9 --> C10[("Cancel Timer 1 (Empty Post)")]:::db
+                C10 --> C11{"Is Timer 2 (No OP Reply) enabled in Settings?"}:::check
+                C11 -- "No" --> C12["Post is safe"]:::endNode
+                C11 -- "Yes" --> C13[("Start Timer 2 (No OP Reply)")]:::db
+            end
+
+            %% INVISIBLE LINK TO KEEP THEM SIDE BY SIDE
+            T1 ~~~ T2
+
+            %% TIMERS TRIGGERING THE SCHEDULER
+            P7 -. "Time passes..." .-> S1
+            C13 -. "Time passes..." .-> S1
+
+            %% 3. SCHEDULER FLOW (BOTTOM)
+            subgraph S ["Scheduler: Alarm Rings"]
+                S1["Event: delayed-action"]:::trigger --> S2[("Delete state & timer from Redis")]:::db
+                S2 --> S3{"Which timer is ringing?"}:::check
+                
+                S3 -- "Timer 1 (Empty Post)" --> S4["Load Settings for Scenario A (Empty Post)"]:::action
+                S3 -- "Timer 2 (No OP Reply)" --> S5["Load Settings for Scenario B (No OP Reply)"]:::action
+                
+                S4 --> S6{"Which Action?"}:::check
+                S5 --> S6
+                
+                S6 -- "Remove" --> S7["Remove Post"]:::action
+                S6 -- "Filter" --> S8["Filter to Modqueue"]:::action
+                S6 -- "Do Nothing" --> S9["Take no action"]:::action
+                
+                S7 --> S10{"Which Notification?"}:::check
+                S8 --> S10
+                S9 --> S10
+                
+                S10 -- "None" --> S11["End"]:::endNode
+                S10 -- "Comment" --> S12["Post stickied comment (Replace placeholders)"]:::action
+                S10 -- "Modmail" --> S13["Send Modmail to OP (Replace placeholders)"]:::action
+            end
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'base',
+            themeVariables: {
+                fontFamily: 'Segoe UI',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

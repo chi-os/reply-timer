@@ -1,22 +1,11 @@
 {
   "name": "reply-timer",
-  "server": {
-    "dir": "dist/server",
-    "entry": "index.cjs"
-  },
-  "triggers": {
-    "onPostSubmit": "/internal/triggers/on-post-submit"
-  },
-  "scheduler": {
-    "tasks": {
-      "delayed-delete": {
-        "endpoint": "/internal/scheduler/delayed-delete"
-      }
-    }
-  },
-  "scripts": {
-    "build": "vite build",
-    "dev": "vite build --watch"
+  "blocks": {
+    "entry": "src/main.ts",
+    "triggers": [
+      "onPostSubmit",
+      "onCommentCreate"
+    ]
   },
   "permissions": {
     "reddit": true

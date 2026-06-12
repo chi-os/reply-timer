@@ -1,94 +1,36 @@
-# Devvit Mod Tool Template
+# OP Reply Enforcer (reply-timer)
 
-A template for building Reddit moderation tools using Devvit web. This template provides a complete foundation for creating custom moderation tools with bulk comment management capabilities.
-
-## Features
-
-This template includes a working mod tool called **"Mop"** that demonstrates:
-
-- **Bulk Comment Management**: Remove or lock multiple comments at once
-- **Thread-level Actions**: "Mop comments" - Remove/lock a comment and all its replies
-- **Post-level Actions**: "Mop post comments" - Remove/lock all comments on a post
-- **Flexible Options**:
-  - Remove comments, lock comments, or both
-  - Skip distinguished comments (moderator/admin posts)
-- **Permission Checks**: Only moderators with proper permissions can use the tool
-- **User-friendly Forms**: Interactive forms with clear options and validation
-
-## Tech Stack
-
-- [Devvit](https://developers.reddit.com/): Reddit's platform for building and deploying apps
-- [Vite](https://vite.dev/): Fast build tool for the web components
-- [Hono](https://hono.dev/): Lightweight web framework for backend logic
-- [TypeScript](https://www.typescriptlang.org/): Type-safe development
-
-## Getting Started
-
-1. **Clone this template** or use it as a starting point for your mod tool
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-3. **Configure your app** in `devvit.json`:
-   - Update the app name
-   - Set your development subreddit
-4. **Start developing**:
-   ```bash
-   npm run dev
-   ```
-5. **Test your changes** in your development subreddit
-
-## Project Structure
-
-```
-src/
-├── index.ts          # Main server setup with Hono routes
-├── core/
-│   └── nuke.ts       # Core moderation logic for bulk operations
-└── routes/
-    ├── api.ts        # Public API endpoints
-    ├── forms.ts      # Form submission handlers
-    ├── menu.ts       # Context menu item handlers
-    └── triggers.ts   # App lifecycle triggers
-```
-
-## Customizing Your Mod Tool
-
-This template is designed to be easily customizable:
-
-1. **Modify existing actions**: Edit the nuke functionality in `src/core/nuke.ts`
-2. **Add new menu items**: Update `devvit.json` and add handlers in `src/routes/menu.ts`
-3. **Create new forms**: Add form definitions and handlers in `src/routes/forms.ts`
-4. **Add API endpoints**: Extend `src/routes/api.ts` for external integrations
-
-## Commands
-
-- `npm run dev`: Starts development mode with live reload on your test subreddit
-- `npm run build`: Builds your mod tool for production
-- `npm run deploy`: Uploads a new version of your app to Reddit
-- `npm run launch`: Publishes your app for review and public use
-- `npm run login`: Authenticates your CLI with Reddit
-- `npm run type-check`: Runs TypeScript type checking, linting, and formatting
+A highly flexible Reddit moderation bot built on the Devvit platform. This app ensures active thread engagement by monitoring two critical phases of a post's lifecycle using an intelligent, cascading dual-timer system.
 
 ## How It Works
 
-The template demonstrates Reddit mod tool development through the "Mop" feature:
+The app operates through two sequential, automated watchdogs:
 
-1. **Context Menu Integration**: Click on the Mod Shield icon in a comment to see custom mod actions
-2. **Permission Validation**: Automatically checks if the user has moderation permissions
-3. **Interactive Forms**: Presents options through Reddit's native form system
-4. **Reddit API**: Processes multiple comments using Reddit's API
+1. **Timer 1 (Initial Community Response Watchdog):** Starts the moment a post is submitted. If the customized timeframe expires and *no one* from the community has commented, the app executes the configured **Scenario A** action (e.g., leaving it up, removing it, or filtering it due to lack of community traction).
+   
+2. **Timer 2 (OP Discussion Participation Watchdog):**
+   The exact millisecond the *first community comment* (not made by the OP) lands, **Timer 1 is instantly terminated**, and **Timer 2 is initiated**. If the OP fails to reply to any comment within this new timeframe, the app executes the configured **Scenario B** action.
 
-## Development Notes
+**Instant Safety Valve:** The moment the OP comments *anywhere* in their thread at *any time*, all active timers are immediately destroyed, and the post is marked as safe.
 
-- **Permissions**: The app requires `reddit: true` permission to access Reddit's API
-- **User Types**: Menu items are restricted to `moderator` user type
+## Key Features
 
-## Deployment
+* **Cascading Dual-Timer System:** Separate, independent timeframes and actions for empty threads vs. threads abandoned by the OP.
+* **Smart Context Switching:** Real-time transitioning from the initial post timer to the OP reply timer upon the first user interaction.
+* **Custom Notification Engine:** Independently configure stickied comments or private Modmails for each scenario with full markdown support.
+* **Dynamic Placeholders:** Personalize notification templates automatically using:
+  * `{{author}}` — The username of the post creator.
+  * `{{action}}` — Automatically renders as *removed* or *filtered to the modqueue* based on your setup.
+  * `{{x}}` — The precise number of minutes configured for that specific timer.
+  * `Modmail` — Renders as a direct markdown link to compose a message to your subreddit's mod team.
+* **Granular Exceptions:** Protect your community assets by ignoring moderators, approved users, or specific post flairs (e.g., Announcements, Megathreads).
 
-1. Test thoroughly in your development subreddit
-2. Run `npm run deploy` to upload your app
-3. Use `npm run launch` to submit for Reddit's app review process
-4. Once approved, users can install your mod tool from Reddit's app directory
+## Use Cases
 
-This template provides everything you need to build powerful, user-friendly moderation tools for Reddit communities.
+* **Q&A and Tech Support Hubs:** Eliminates "hit and run" questions where OPs abandon their threads after community members take time to provide diagnostic help.
+* **Discussions & Debates:** Encourages genuine community exchange by filtering out users who drop controversial posts without participating in the resulting discourse.
+* **Ask Me Anything (AMAs):** Ensures guest speakers respond to early questions within a reasonable window, preventing empty or unmonitored events.
+
+## Configuration
+
+Settings are fully integrated into Reddit's native Mod Tools (`Mod Tools -> Apps -> reply-timer`). The interface is grouped into clean, intuitive sections: Exceptions & Rules, General Timer Settings, Scenario A (Empty Posts), and Scenario B (No OP Reply).
