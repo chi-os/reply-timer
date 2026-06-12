@@ -1,6 +1,14 @@
 # OP Reply Enforcer (reply-timer)
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/chi-os/reply-timer)
+
 A highly flexible Reddit moderation bot built on the Devvit platform. This app ensures active thread engagement by monitoring two critical phases of a post's lifecycle using an intelligent, cascading dual-timer system.
+
+## 💻 Source Code & Contributions
+The source code for this project is fully open-source. You can view the code, report issues, or contribute directly on GitHub: 
+**[chi-os/reply-timer](https://github.com/chi-os/reply-timer)**
+
+---
 
 ## How It Works
 
@@ -20,10 +28,10 @@ The app operates through two sequential, automated watchdogs:
 * **Custom Notification Engine:** Independently configure stickied comments or private Modmails for each scenario with full markdown support.
 * **Dynamic Placeholders:** Personalize notification templates automatically using:
   * `{{author}}` — The username of the post creator.
-  * `{{action}}` — Automatically renders as *removed* or *filtered to the modqueue* based on your setup.
+  * `{{action}}` — Automatically renders as *removed*, *filtered to the modqueue*, or *flagged* based on your setup.
   * `{{x}}` — The precise number of minutes configured for that specific timer.
   * `Modmail` — Renders as a direct markdown link to compose a message to your subreddit's mod team.
-* **Granular Exceptions:** Protect your community assets by ignoring moderators, approved users, or specific post flairs (e.g., Announcements, Megathreads).
+* **Granular Exceptions:** Protect your community assets by ignoring moderators, approved users, verified emails, minimum karma thresholds, or specific post flairs (e.g., Announcements, Megathreads).
 
 ## Use Cases
 
