@@ -1,5 +1,8 @@
 {
   "name": "reply-timer",
+  "marketingAssets": {
+    "icon": "assets/Reply-timer-logo.png"
+  },
   "blocks": {
     "entry": "src/main.ts",
     "triggers": [
