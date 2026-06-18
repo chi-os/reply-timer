@@ -3,8 +3,25 @@ import { SettingsFormField } from '@devvit/public-api';
 export const appSettings: SettingsFormField[] = [
   {
     type: 'group',
-    label: '1. Exceptions & Rules',
+    label: '1. General Setup & Exceptions',
     fields: [
+      {
+        name: 'language',
+        type: 'select',
+        label: 'App Language',
+        helpText: 'Select the default language for automated notifications and mod notes. You can still write custom notification texts below to override the defaults.',
+        options: [
+          { label: 'English', value: 'en' },
+          { label: 'Deutsch (German)', value: 'de' },
+          { label: 'Español (Spanish)', value: 'es' },
+          { label: 'Français (French)', value: 'fr' },
+          { label: 'Português (Portuguese)', value: 'pt' },
+          { label: 'Italiano (Italian)', value: 'it' },
+          { label: 'Nederlands (Dutch)', value: 'nl' }
+        ],
+        multiSelect: false,
+        defaultValue: ['en']
+      },
       {
         name: 'ignored_flairs',
         type: 'string',
@@ -29,21 +46,18 @@ export const appSettings: SettingsFormField[] = [
         name: 'ignore_verified_email',
         type: 'boolean',
         label: 'Ignore users with verified email',
-        helpText: 'If enabled, the timers will ignore posts made by users who have a verified email address.',
         defaultValue: false
       },
       {
         name: 'ignore_total_karma',
         type: 'number',
-        label: 'Ignore by total account karma',
-        helpText: 'Ignore users with a total karma equal to or higher than this value. Set to 0 to disable.',
+        label: 'Ignore by total account karma (Set to 0 to disable)',
         defaultValue: 0
       },
       {
         name: 'ignore_community_karma',
         type: 'number',
-        label: 'Ignore by community karma',
-        helpText: 'Ignore users with community karma equal to or higher than this value. Set to 0 to disable.',
+        label: 'Ignore by community karma (Set to 0 to disable)',
         defaultValue: 0
       }
     ]
@@ -56,14 +70,12 @@ export const appSettings: SettingsFormField[] = [
         name: 'enable_timer_1',
         type: 'boolean',
         label: 'Enable Timer 1 (Empty Post Watchdog)',
-        helpText: 'Turn this ON to take action if a post receives NO comments from the community at all.',
         defaultValue: true
       },
       {
         name: 'empty_wait_time_minutes',
         type: 'number',
         label: 'Wait time for initial community response (in minutes)',
-        helpText: 'How long should the app wait for the FIRST community comment before considering the post "empty"?',
         defaultValue: 60
       },
       {
@@ -93,9 +105,9 @@ export const appSettings: SettingsFormField[] = [
       {
         name: 'empty_notification_text',
         type: 'paragraph',
-        label: 'Notification Text Template (Empty Post)',
-        helpText: 'Customize the message sent to the author. You can use these dynamic placeholders:\n\n• {{author}} - Replaced with the username.\n• {{action}} - Becomes "removed", "filtered to the modqueue", or "flagged (but no action was taken)" if Action is "Do nothing".\n• {{x}} - Inserts the exact wait time.\n\n💡 Pro-Tip: The word "Modmail" will automatically be converted into a clickable markdown hyperlink.',
-        defaultValue: 'Hello {{author}}.\n\nYour post has been {{action}} because it did not receive any responses from the community within the {{x}} minute timeframe.\n\nIf you have any questions, please reach out via Modmail.'
+        label: 'Custom Notification Text (Empty Post)',
+        helpText: 'LEAVE EMPTY to use the default text for your selected language. If you write here, it will override the default. Placeholders: {{author}}, {{action}}, {{x}}.',
+        defaultValue: ''
       }
     ]
   },
@@ -107,14 +119,12 @@ export const appSettings: SettingsFormField[] = [
         name: 'enable_timer_2',
         type: 'boolean',
         label: 'Enable Timer 2 (OP Reply Watchdog)',
-        helpText: 'Turn this ON to take action if the community comments, but the OP fails to reply.',
         defaultValue: true
       },
       {
         name: 'reply_wait_time_minutes',
         type: 'number',
         label: 'Wait time for OP reply (in minutes)',
-        helpText: 'After the first community comment is made, how long does the OP have to reply?',
         defaultValue: 60
       },
       {
@@ -144,9 +154,9 @@ export const appSettings: SettingsFormField[] = [
       {
         name: 'reply_notification_text',
         type: 'paragraph',
-        label: 'Notification Text Template (No Reply)',
-        helpText: 'Customize the message sent to the author. You can use these dynamic placeholders:\n\n• {{author}} - Replaced with the username.\n• {{action}} - Becomes "removed", "filtered to the modqueue", or "flagged (but no action was taken)" if Action is "Do nothing".\n• {{x}} - Inserts the exact wait time.\n\n💡 Pro-Tip: The word "Modmail" will automatically be converted into a clickable markdown hyperlink.',
-        defaultValue: 'Hello {{author}}.\n\nYour post has been {{action}} because you did not reply to any comments within the {{x}} minute timeframe required by this subreddit.\n\nIf you have any questions, please reach out via Modmail.'
+        label: 'Custom Notification Text (No Reply)',
+        helpText: 'LEAVE EMPTY to use the default text for your selected language. If you write here, it will override the default. Placeholders: {{author}}, {{action}}, {{x}}.',
+        defaultValue: ''
       }
     ]
   }

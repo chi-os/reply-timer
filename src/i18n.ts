@@ -1,0 +1,72 @@
+export const translations: Record<string, any> = {
+  en: {
+    empty_post: "Hello {{author}}.\n\nYour post has been {{action}} because it did not receive any responses from the community within the {{x}} minute timeframe.\n\nIf you have any questions, please reach out via Modmail.",
+    reply_post: "Hello {{author}}.\n\nYour post has been {{action}} because you did not reply to any comments within the {{x}} minute timeframe required by this subreddit.\n\nIf you have any questions, please reach out via Modmail.",
+    action_flagged: "flagged (but no action was taken)",
+    action_removed: "removed",
+    action_filtered: "filtered to the modqueue",
+    mod_note_empty: "Automatically actioned: Wait time expired and post remained empty.",
+    mod_note_reply: "Automatically actioned: Wait time expired and OP did not reply.",
+    subject: "Automated Subreddit Notification"
+  },
+  de: {
+    empty_post: "Hallo {{author}}.\n\nDein Beitrag wurde {{action}}, da er innerhalb der vorgegebenen Zeit von {{x}} Minuten keine Antworten aus der Community erhalten hat.\n\nFalls du Fragen hast, melde dich gerne per Modmail.",
+    reply_post: "Hallo {{author}}.\n\nDein Beitrag wurde {{action}}, da du nicht innerhalb der vorgegebenen Zeit von {{x}} Minuten auf die Kommentare geantwortet hast.\n\nFalls du Fragen hast, melde dich gerne per Modmail.",
+    action_flagged: "markiert (es wurde jedoch keine Aktion ausgeführt)",
+    action_removed: "entfernt",
+    action_filtered: "in die Mod-Warteschlange gefiltert",
+    mod_note_empty: "Automatische Aktion: Wartezeit abgelaufen und Beitrag blieb leer.",
+    mod_note_reply: "Automatische Aktion: Wartezeit abgelaufen und OP hat nicht geantwortet.",
+    subject: "Automatische Subreddit-Benachrichtigung"
+  },
+  es: {
+    empty_post: "Hola {{author}}.\n\nTu publicación ha sido {{action}} porque no recibió ninguna respuesta de la comunidad en el plazo de {{x}} minutos.\n\nSi tienes alguna pregunta, por favor contáctanos vía Modmail.",
+    reply_post: "Hola {{author}}.\n\nTu publicación ha sido {{action}} porque no respondiste a ningún comentario en el plazo de {{x}} minutos requerido por este subreddit.\n\nSi tienes alguna pregunta, por favor contáctanos vía Modmail.",
+    action_flagged: "marcada (pero no se tomó ninguna acción)",
+    action_removed: "eliminada",
+    action_filtered: "filtrada a la cola de moderación",
+    mod_note_empty: "Acción automática: El tiempo de espera expiró y la publicación permaneció vacía.",
+    mod_note_reply: "Acción automática: El tiempo de espera expiró y el OP no respondió.",
+    subject: "Notificación automatizada del subreddit"
+  },
+  fr: {
+    empty_post: "Bonjour {{author}}.\n\nVotre publication a été {{action}} car elle n'a reçu aucune réponse de la communauté dans le délai de {{x}} minutes.\n\nSi vous avez des questions, veuillez nous contacter via Modmail.",
+    reply_post: "Bonjour {{author}}.\n\nVotre publication a été {{action}} car vous n'avez répondu à aucun commentaire dans le délai de {{x}} minutes requis par ce subreddit.\n\nSi vous avez des questions, veuillez nous contacter via Modmail.",
+    action_flagged: "signalée (mais aucune action n'a été entreprise)",
+    action_removed: "supprimée",
+    action_filtered: "filtrée vers la file d'attente de modération",
+    mod_note_empty: "Action automatique : Le délai d'attente a expiré et la publication est restée vide.",
+    mod_note_reply: "Action automatique : Le délai d'attente a expiré et l'OP n'a pas répondu.",
+    subject: "Notification automatisée du subreddit"
+  },
+  pt: {
+    empty_post: "Olá {{author}}.\n\nSua publicação foi {{action}} porque não recebeu nenhuma resposta da comunidade no prazo de {{x}} minutos.\n\nSe você tiver alguma dúvida, entre em contato via Modmail.",
+    reply_post: "Olá {{author}}.\n\nSua publicação foi {{action}} porque você não respondeu a nenhum comentário dentro do prazo de {{x}} minutos exigido por este subreddit.\n\nSe você tiver alguma dúvida, entre em contato via Modmail.",
+    action_flagged: "sinalizada (mas nenhuma ação foi tomada)",
+    action_removed: "removida",
+    action_filtered: "filtrada para a fila de moderação",
+    mod_note_empty: "Ação automática: O tempo de espera expirou e a publicação permaneceu vazia.",
+    mod_note_reply: "Ação automática: O tempo de espera expirou e o OP não respondeu.",
+    subject: "Notificação automatizada do subreddit"
+  },
+  it: {
+    empty_post: "Ciao {{author}}.\n\nIl tuo post è stato {{action}} perché non ha ricevuto alcuna risposta dalla community entro il limite di {{x}} minuti.\n\nSe hai domande, ti preghiamo di contattarci tramite Modmail.",
+    reply_post: "Ciao {{author}}.\n\nIl tuo post è stato {{action}} perché non hai risposto a nessun commento entro il limite di {{x}} minuti richiesto da questo subreddit.\n\nSe hai domande, ti preghiamo di contattarci tramite Modmail.",
+    action_flagged: "segnalato (ma non è stata intrapresa alcuna azione)",
+    action_removed: "rimosso",
+    action_filtered: "filtrato nella coda di moderazione",
+    mod_note_empty: "Azione automatica: Il tempo di attesa è scaduto e il post è rimasto vuoto.",
+    mod_note_reply: "Azione automatica: Il tempo di attesa è scaduto e l'OP non ha risposto.",
+    subject: "Notifica automatizzata del subreddit"
+  },
+  nl: {
+    empty_post: "Hallo {{author}}.\n\nJe bericht is {{action}} omdat het binnen de tijdslimiet van {{x}} minuten geen reacties vanuit de community heeft ontvangen.\n\nAls je vragen hebt, neem dan contact op via Modmail.",
+    reply_post: "Hallo {{author}}.\n\nJe bericht is {{action}} omdat je niet binnen de door deze subreddit vereiste tijdslimiet van {{x}} minuten op reacties hebt geantwoord.\n\nAls je vragen hebt, neem dan contact op via Modmail.",
+    action_flagged: "gemarkeerd (maar er is geen actie ondernomen)",
+    action_removed: "verwijderd",
+    action_filtered: "gefilterd naar de modqueue",
+    mod_note_empty: "Automatische actie: Wachttijd verstreken en bericht bleef leeg.",
+    mod_note_reply: "Automatische actie: Wachttijd verstreken en OP heeft niet geantwoord.",
+    subject: "Geautomatiseerde subreddit-melding"
+  }
+};

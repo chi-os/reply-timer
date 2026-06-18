@@ -25,20 +25,54 @@ The app operates through two sequential, automated watchdogs:
 
 * **Cascading Dual-Timer System:** Separate, independent timeframes and actions for empty threads vs. threads abandoned by the OP.
 * **Smart Context Switching:** Real-time transitioning from the initial post timer to the OP reply timer upon the first user interaction.
+* **🌐 Native Multilingual Support (i18n):** Out-of-the-box support for multiple languages (currently **English** and **German**). The bot automatically translates its core notification templates, action descriptions, and mod log notes based on the chosen language.
+* **Smart Override Principle:** Subreddit moderators can leave the notification text fields completely blank to use the professionally translated localized defaults, or type a custom message to entirely override them.
 * **Custom Notification Engine:** Independently configure stickied comments or private Modmails for each scenario with full markdown support.
 * **Dynamic Placeholders:** Personalize notification templates automatically using:
   * `{{author}}` — The username of the post creator.
-  * `{{action}}` — Automatically renders as *removed*, *filtered to the modqueue*, or *flagged* based on your setup.
+  * `{{action}}` — Renders as the localized equivalent of *removed*, *filtered to the modqueue*, or *flagged (no action taken)* based on your setup.
   * `{{x}}` — The precise number of minutes configured for that specific timer.
-  * `Modmail` — Renders as a direct markdown link to compose a message to your subreddit's mod team.
+  * `Modmail` — Automatically converts into a direct markdown link to compose a message to your subreddit's mod team.
 * **Granular Exceptions:** Protect your community assets by ignoring moderators, approved users, verified emails, minimum karma thresholds, or specific post flairs (e.g., Announcements, Megathreads).
 
-## Use Cases
+## Localization & Internationalization (i18n)
 
-* **Q&A and Tech Support Hubs:** Eliminates "hit and run" questions where OPs abandon their threads after community members take time to provide diagnostic help.
-* **Discussions & Debates:** Encourages genuine community exchange by filtering out users who drop controversial posts without participating in the resulting discourse.
-* **Ask Me Anything (AMAs):** Ensures guest speakers respond to early questions within a reasonable window, preventing empty or unmonitored events.
+To make the app accessible for international communities, the bot features a central translation registry.
+
+### Supported Languages
+* `en` — English (Default)
+* `de` — Deutsch (German)
+* `es` — Español (Spanish)
+* `fr` — Français (French)
+* `pt` — Português (Portuguese)
+* `it` — Italiano (Italian)
+* `nl` — Nederlands (Dutch)
+
+*Missing your community's language? Feel free to request additional languages by opening an issue on our GitHub repository, or contanct the developer (u/achchi) directly!*
+
+### How to use Localized Defaults
+1. In your Subreddit Mod Tools, navigate to the App Settings for `reply-timer`.
+2. Under **1. General Setup & Exceptions**, locate the **App Language** dropdown and select your language (e.g., `Deutsch`).
+3. Scroll down to the notification text fields. Clear all text and leave them completely **BLANK**.
+4. Save settings. The bot will now automatically dispatch perfectly tailored messages and format all moderation reasons in the selected language.
+
+---
 
 ## Configuration
 
 Settings are fully integrated into Reddit's native Mod Tools (`Mod Tools -> Apps -> reply-timer`). The interface is grouped into clean, intuitive sections: Exceptions & Rules, General Timer Settings, Scenario A (Empty Posts), and Scenario B (No OP Reply).
+
+
+---
+
+# Changelog
+
+## 0.0.7
+* Added Language support de, es, fr, pt, it, nl
+* Interface updates for Language support
+
+## 0.0.6
+* Reddit API Migration 0.13.3 -> 0.13.4
+
+## 0.0.4 
+* Initial MVP

@@ -1,5 +1,6 @@
 import { Devvit } from '@devvit/public-api';
 import { appSettings } from './settings.js';
+import { translations } from './i18n.js'; // NEU: Unser Wörterbuch importieren
 
 Devvit.configure({
   redditAPI: true,
@@ -19,13 +20,17 @@ Devvit.addSchedulerJob({
     if (!postId || !timerType) return;
 
     try {
-      // 1. Datenbank aufräumen
       await context.redis.del(`timer:${timerType}:${postId}`);
       await context.redis.del(`state:${postId}`); 
 
       const settings = await context.settings.getAll();
       const post = await context.reddit.getPostById(postId);
-      const currentSubreddit = post.subredditName; // Kugelsicherer String
+      const currentSubreddit = post.subredditName; 
+
+      // SPRACHE LADEN
+      const langArray = (settings.language as string[]) ?? ['en'];
+      const lang = langArray[0] ?? 'en';
+      const t = translations[lang] || translations['en']; // Fallback auf Englisch
 
       let selectedAction = 'none';
       let notificationType = 'none';
@@ -33,7 +38,6 @@ Devvit.addSchedulerJob({
       let waitTime = 60;
       let modNoteText = '';
 
-      // 2. Werte sauber laden
       if (timerType === 'empty') {
         const actionArray = (settings.empty_action as string[]) ?? [];
         selectedAction = actionArray[0] ?? 'none';
@@ -41,9 +45,12 @@ Devvit.addSchedulerJob({
         const notifArray = (settings.empty_notification_type as string[]) ?? [];
         notificationType = notifArray[0] ?? 'none';
         
-        rawNotificationText = (settings.empty_notification_text as string) ?? "";
+        // Püfen, ob ein eigener Text geschrieben wurde. Wenn nicht -> Wörterbuch nutzen.
+        const customText = (settings.empty_notification_text as string)?.trim();
+        rawNotificationText = customText ? customText : t.empty_post;
+        
         waitTime = (settings.empty_wait_time_minutes as number) ?? 60;
-        modNoteText = "Automatically actioned: Wait time expired and post remained empty.";
+        modNoteText = t.mod_note_empty;
         
         console.log(`⏰ [Timer 1] ringing for empty post ${postId}. Action: ${selectedAction}`);
       } else if (timerType === 'reply') {
@@ -53,23 +60,24 @@ Devvit.addSchedulerJob({
         const notifArray = (settings.reply_notification_type as string[]) ?? [];
         notificationType = notifArray[0] ?? 'none';
         
-        rawNotificationText = (settings.reply_notification_text as string) ?? "";
+        // Püfen, ob ein eigener Text geschrieben wurde. Wenn nicht -> Wörterbuch nutzen.
+        const customText = (settings.reply_notification_text as string)?.trim();
+        rawNotificationText = customText ? customText : t.reply_post;
+        
         waitTime = (settings.reply_wait_time_minutes as number) ?? 60;
-        modNoteText = "Automatically actioned: Wait time expired and OP did not reply.";
+        modNoteText = t.mod_note_reply;
 
         console.log(`⏰ [Timer 2] ringing for unanswered post ${postId}. Action: ${selectedAction}`);
       }
 
-      // Wenn beides "none" ist, beenden wir direkt.
       if (selectedAction === 'none' && notificationType === 'none') {
-        console.log(`⏭️ Post ${postId} requires no action for this scenario.`);
         return;
       }
 
-      // 3. Platzhalter formatieren (Angepasste Grammatik für "Do nothing")
-      let actionText = 'flagged (but no action was taken)';
-      if (selectedAction === 'remove') actionText = 'removed';
-      if (selectedAction === 'filter') actionText = 'filtered to the modqueue';
+      // ÜBERSETZTE PLATZHALTER LADEN
+      let actionText = t.action_flagged;
+      if (selectedAction === 'remove') actionText = t.action_removed;
+      if (selectedAction === 'filter') actionText = t.action_filtered;
 
       const modmailMarkdownLink = `[Modmail](https://www.reddit.com/message/compose?to=/r/${currentSubreddit})`;
       const formattedNotificationText = rawNotificationText
@@ -78,30 +86,24 @@ Devvit.addSchedulerJob({
         .replace(/{{x}}/g, waitTime.toString())
         .replace(/Modmail/g, modmailMarkdownLink);
 
-      // 4. Moderationsaktion ausführen
       if (selectedAction === 'remove') {
         await post.remove(false);
         await post.addRemovalNote({ reasonId: '', modNote: modNoteText });
-        console.log(`🗑️ Post ${postId} successfully removed.`);
       } else if (selectedAction === 'filter') {
         await context.reddit.report(post, { reason: modNoteText });
-        console.log(`🛡️ Post ${postId} filtered to modqueue.`);
       }
 
-      // 5. Benachrichtigung absenden
       if (notificationType === 'comment') {
         const comment = await post.addComment({ text: formattedNotificationText });
         await comment.distinguish(true); 
-        console.log(`💬 Stickied comment added to post ${postId}.`);
       } else if (notificationType === 'modmail') {
         await context.reddit.modMail.createConversation({
           subredditName: currentSubreddit, 
           to: post.authorName,
-          subject: "Automated Subreddit Notification",
+          subject: t.subject, // Übersetzter Betreff
           body: formattedNotificationText,
           isAuthorHidden: true
         });
-        console.log(`✉️ Modmail notification sent to author ${post.authorName}.`);
       }
 
     } catch (error) {
