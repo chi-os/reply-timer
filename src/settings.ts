@@ -9,7 +9,7 @@ export const appSettings: SettingsFormField[] = [
         name: 'language',
         type: 'select',
         label: 'App Language',
-        helpText: 'Select the default language for automated notifications and mod notes. You can still write custom notification texts below to override the defaults.',
+        helpText: 'Select the default language for automated notifications and subjects. You can still write custom texts below to override the defaults.',
         options: [
           { label: 'English', value: 'en' },
           { label: 'Deutsch (German)', value: 'de' },
@@ -26,20 +26,18 @@ export const appSettings: SettingsFormField[] = [
         name: 'ignored_flairs',
         type: 'string',
         label: 'Ignored Post Flairs (Comma separated)',
-        helpText: 'Posts with these exact flairs will be ignored (e.g., "Announcement, Megathread"). Case-insensitive.'
+        helpText: 'Posts with these exact flairs will be ignored. Case-insensitive.'
       },
       {
         name: 'ignore_moderators',
         type: 'boolean',
         label: 'Ignore Moderators',
-        helpText: 'If enabled, the timers will ignore posts made by moderators.',
         defaultValue: true
       },
       {
         name: 'ignore_approved_users',
         type: 'boolean',
         label: 'Ignore Approved Users',
-        helpText: 'If enabled, the timers will ignore posts made by approved users.',
         defaultValue: true
       },
       {
@@ -64,7 +62,7 @@ export const appSettings: SettingsFormField[] = [
   },
   {
     type: 'group',
-    label: '2. Timer 1: Post Creation (Empty Post)',
+    label: '2. Scenario A: Empty Post',
     fields: [
       {
         name: 'enable_timer_1',
@@ -93,7 +91,7 @@ export const appSettings: SettingsFormField[] = [
       {
         name: 'empty_notification_type',
         type: 'select',
-        label: 'Notification Type (Empty Post)',
+        label: 'Notification Type',
         options: [
           { label: 'None', value: 'none' },
           { label: 'Leave a stickied comment', value: 'comment' },
@@ -103,17 +101,24 @@ export const appSettings: SettingsFormField[] = [
         defaultValue: ['none']
       },
       {
+        name: 'empty_subject',
+        type: 'string',
+        label: 'Custom Modmail Subject (Empty Post)',
+        helpText: 'LEAVE EMPTY to use the translated default subject.',
+        defaultValue: ''
+      },
+      {
         name: 'empty_notification_text',
         type: 'paragraph',
         label: 'Custom Notification Text (Empty Post)',
-        helpText: 'LEAVE EMPTY to use the default text for your selected language. If you write here, it will override the default. Placeholders: {{author}}, {{action}}, {{x}}.',
+        helpText: 'LEAVE EMPTY to use the default language. Placeholders: {{author}}, {{action}}, {{x}}.',
         defaultValue: ''
       }
     ]
   },
   {
     type: 'group',
-    label: '3. Timer 2: First Comment (OP Reply)',
+    label: '3. Scenario B: OP Does Not Reply',
     fields: [
       {
         name: 'enable_timer_2',
@@ -124,7 +129,7 @@ export const appSettings: SettingsFormField[] = [
       {
         name: 'reply_wait_time_minutes',
         type: 'number',
-        label: 'Wait time for OP reply (in minutes)',
+        label: 'Final wait time for OP reply (in minutes)',
         defaultValue: 60
       },
       {
@@ -142,7 +147,7 @@ export const appSettings: SettingsFormField[] = [
       {
         name: 'reply_notification_type',
         type: 'select',
-        label: 'Notification Type (No Reply)',
+        label: 'Notification Type (Final Action)',
         options: [
           { label: 'None', value: 'none' },
           { label: 'Leave a stickied comment', value: 'comment' },
@@ -152,10 +157,54 @@ export const appSettings: SettingsFormField[] = [
         defaultValue: ['none']
       },
       {
+        name: 'reply_subject',
+        type: 'string',
+        label: 'Custom Modmail Subject (Final Action)',
+        defaultValue: ''
+      },
+      {
         name: 'reply_notification_text',
         type: 'paragraph',
-        label: 'Custom Notification Text (No Reply)',
-        helpText: 'LEAVE EMPTY to use the default text for your selected language. If you write here, it will override the default. Placeholders: {{author}}, {{action}}, {{x}}.',
+        label: 'Custom Notification Text (Final Action)',
+        defaultValue: ''
+      },
+      {
+        name: 'enable_warning_timer',
+        type: 'boolean',
+        label: 'Enable Warning Timer',
+        helpText: 'If enabled, sends a warning message before the final timer expires.',
+        defaultValue: false
+      },
+      {
+        name: 'warning_wait_time_minutes',
+        type: 'number',
+        label: 'Wait time until WARNING is sent (in minutes)',
+        helpText: 'Must be lower than the Final OP Reply wait time.',
+        defaultValue: 45
+      },
+      {
+        name: 'warning_notification_type',
+        type: 'select',
+        label: 'Notification Type (Warning)',
+        options: [
+          { label: 'None', value: 'none' },
+          { label: 'Leave a stickied comment', value: 'comment' },
+          { label: 'Send a Modmail', value: 'modmail' }
+        ],
+        multiSelect: false,
+        defaultValue: ['none']
+      },
+      {
+        name: 'warning_subject',
+        type: 'string',
+        label: 'Custom Modmail Subject (Warning)',
+        defaultValue: ''
+      },
+      {
+        name: 'warning_notification_text',
+        type: 'paragraph',
+        label: 'Custom Notification Text (Warning)',
+        helpText: 'Placeholders: {{author}}, {{action}}, {{xy}} (Remaining minutes).',
         defaultValue: ''
       }
     ]
