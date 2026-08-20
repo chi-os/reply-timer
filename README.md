@@ -68,6 +68,10 @@ Settings are fully integrated into Reddit's native Mod Tools (`Mod Tools -> Apps
 
 # Changelog
 
+## 2.1.0
+* Reddit API Migration 0.13.4 -> 0.14.1
+* Autoarchive for Modmail
+
 ## 2.0.0
 * Implemented 3-Stage Cascading Timer System.
 * Added optional Warning Timer to notify users before their post is actioned.
