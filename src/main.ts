@@ -37,6 +37,7 @@ Devvit.addSchedulerJob({
       const langArray = (settings.language as string[]) ?? ['en'];
       const lang = langArray[0] ?? 'en';
       const t = translations[lang] || translations['en'];
+      const autoArchiveModmails = (settings.auto_archive_modmails as boolean) ?? false;
 
       let selectedAction = 'none';
       let notificationType = 'none';
@@ -96,17 +97,39 @@ Devvit.addSchedulerJob({
         }
       }
 
+      // ... vorheriger Code ...
+
       if (notificationType === 'comment') {
         const comment = await post.addComment({ text: formattedNotificationText });
         await comment.distinguish(true); 
       } else if (notificationType === 'modmail') {
-        await context.reddit.modMail.createConversation({
-          subredditName: currentSubreddit, 
-          to: post.authorName,
-          subject: rawSubject,
-          body: formattedNotificationText,
-          isAuthorHidden: true
-        });
+        
+        // Prüfen, ob der User existiert
+        if (post.authorName && post.authorName !== '[deleted]') {
+          
+          // 1. Modmail senden und Antwort speichern
+          const modmailResponse = await context.reddit.modMail.createConversation({
+            subredditName: currentSubreddit, 
+            to: post.authorName,
+            subject: rawSubject,
+            body: formattedNotificationText,
+            isAuthorHidden: true
+          });
+          
+          // 2. Prüfen ob archiviert werden soll
+          if (autoArchiveModmails && modmailResponse.conversation?.id) {
+            try {
+              await context.reddit.modMail.archiveConversation(modmailResponse.conversation.id);
+              console.log(`[Info] Modmail ${modmailResponse.conversation.id} instantly archived.`);
+            } catch (archiveError) {
+              console.log(`[Info] Could not archive Modmail (likely an internal conversation with a moderator). ID: ${modmailResponse.conversation.id}`);
+            }
+          }
+          
+        } else {
+          // Fallback, falls der Account gelöscht wurde
+          console.log(`[Info] Account deleted. Skipping modmail for post ${postId}`);
+        }
       }
 
     } catch (error) {
@@ -114,6 +137,10 @@ Devvit.addSchedulerJob({
     }
   }
 });
+
+// ==========================================
+// TRIGGER 1: POST SUBMIT
+// ==========================================
 
 // ==========================================
 // TRIGGER 1: POST SUBMIT
