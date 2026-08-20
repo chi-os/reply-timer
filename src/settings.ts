@@ -23,6 +23,13 @@ export const appSettings: SettingsFormField[] = [
         defaultValue: ['en']
       },
       {
+        name: 'auto_archive_modmails',
+        type: 'boolean',
+        label: 'Auto-Archive Sent Modmails',
+        helpText: 'If enabled, any Modmail sent automatically by this app will be instantly archived.',
+        defaultValue: false
+      },
+      {
         name: 'ignored_flairs',
         type: 'string',
         label: 'Ignored Post Flairs (Comma separated)',
