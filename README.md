@@ -68,6 +68,9 @@ Settings are fully integrated into Reddit's native Mod Tools (`Mod Tools -> Apps
 
 # Changelog
 
+## 2.1.1
+* Listing in app directory
+
 ## 2.1.0
 * Reddit API Migration 0.13.4 -> 0.14.1
 * Autoarchive for Modmail
