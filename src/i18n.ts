@@ -1,93 +1,132 @@
-export const translations: Record<string, any> = {
+export interface TranslationStrings {
+  // Actions
+  action_removed: string;
+  action_filtered: string;
+  action_flagged: string;
+
+  // Scenario A: Empty Post
+  empty_post: string;
+  subject_empty: string;
+  mod_note_empty: string;
+
+  // Scenario B: OP Warning
+  warning_post: string;
+  subject_warning: string;
+
+  // Scenario B: Final Action
+  reply_post: string;
+  subject_reply: string;
+  mod_note_reply: string;
+
+  // Scenario C: Manual Comment Watchdog
+  manual_watch_comment: string;
+  manual_watch_note: string;
+}
+
+export const translations: Record<string, TranslationStrings> = {
   en: {
-    empty_post: "Hello {{author}}.\n\nYour post has been {{action}} because it did not receive any responses from the community within the {{x}} minute timeframe.\n\nIf you have any questions, please reach out via Modmail.",
-    reply_post: "Hello {{author}}.\n\nYour post has been {{action}} because you did not reply to any comments within the {{x}} minute timeframe required by this subreddit.\n\nIf you have any questions, please reach out via Modmail.",
-    warning_post: "Hello {{author}}.\n\nYour post has received comments, but you haven't replied yet! Please participate in the discussion within the next {{xy}} minutes, otherwise your post will be {{action}}.\n\nThanks!",
-    action_flagged: "flagged (but no action was taken)",
-    action_removed: "removed",
-    action_filtered: "filtered to the modqueue",
-    mod_note_empty: "Automatically actioned: Wait time expired and post remained empty.",
-    mod_note_reply: "Automatically actioned: Wait time expired and OP did not reply.",
-    subject_empty: "Action taken: Your post received no community response",
-    subject_warning: "Action required: Please reply to your post",
-    subject_reply: "Action taken: You did not reply to your post"
+    action_removed: 'removed',
+    action_filtered: 'filtered to the modqueue for review',
+    action_flagged: 'flagged',
+    empty_post: 'Hello {{author}},\n\nYour post has received no comments from the community within {{x}} minutes. As a result, it has been {{action}}.\n\nIf you have questions, please contact Modmail.',
+    subject_empty: 'Notification regarding your post on r/{{subreddit}}',
+    mod_note_empty: 'OP Reply Enforcer: Post received no traction within timeframe.',
+    warning_post: 'Hello {{author}},\n\nA community member replied to your post! Please participate in the discussion. You have {{xy}} minutes remaining before your post is {{action}}.',
+    subject_warning: 'Reminder: Community members replied to your post',
+    reply_post: 'Hello {{author}},\n\nYour post was {{action}} because you did not reply to comments within {{x}} minutes.\n\nIf you have questions, please contact Modmail.',
+    subject_reply: 'Post Actioned: No OP participation',
+    mod_note_reply: 'OP Reply Enforcer: OP failed to reply to comments within timeframe.',
+    manual_watch_comment: 'Hello {{op}},\n\nYou have been requested by the moderators to reply to this comment within {{minutes}} minutes.',
+    manual_watch_note: 'OP failed to reply to comment within {{minutes}} minutes.'
   },
   de: {
-    empty_post: "Hallo {{author}}.\n\nDein Beitrag wurde {{action}}, da er innerhalb der vorgegebenen Zeit von {{x}} Minuten keine Antworten aus der Community erhalten hat.\n\nFalls du Fragen hast, melde dich gerne per Modmail.",
-    reply_post: "Hallo {{author}}.\n\nDein Beitrag wurde {{action}}, da du nicht innerhalb der vorgegebenen Zeit von {{x}} Minuten auf die Kommentare geantwortet hast.\n\nFalls du Fragen hast, melde dich gerne per Modmail.",
-    warning_post: "Hallo {{author}}.\n\nDein Beitrag hat Kommentare erhalten, aber du hast noch nicht geantwortet! Bitte beteilige dich innerhalb der nächsten {{xy}} Minuten an der Diskussion, da dein Post ansonsten {{action}} wird.\n\nDanke!",
-    action_flagged: "markiert (es wurde jedoch keine Aktion ausgeführt)",
-    action_removed: "entfernt",
-    action_filtered: "in die Mod-Warteschlange gefiltert",
-    mod_note_empty: "Automatische Aktion: Wartezeit abgelaufen und Beitrag blieb leer.",
-    mod_note_reply: "Automatische Aktion: Wartezeit abgelaufen und OP hat nicht geantwortet.",
-    subject_empty: "Aktion ausgeführt: Dein Beitrag blieb unbeantwortet",
-    subject_warning: "Aktion erforderlich: Bitte antworte auf deinen Beitrag",
-    subject_reply: "Aktion ausgeführt: Du hast nicht auf Kommentare geantwortet"
+    action_removed: 'entfernt',
+    action_filtered: 'zur Überprüfung in die Modqueue verschoben',
+    action_flagged: 'markiert',
+    empty_post: 'Hallo {{author}},\n\ndein Beitrag hat innerhalb von {{x}} Minuten keine Kommentare aus der Community erhalten. Daher wurde er {{action}}.\n\nBei Fragen wende dich bitte an die Modmail.',
+    subject_empty: 'Hinweis zu deinem Beitrag auf r/{{subreddit}}',
+    mod_note_empty: 'OP Reply Enforcer: Beitrag erhielt innerhalb der Frist keine Interaktion.',
+    warning_post: 'Hallo {{author}},\n\nein Mitglied der Community hat auf deinen Beitrag geantwortet! Bitte beteilige dich an der Diskussion. Du hast noch {{xy}} Minuten Zeit, bevor dein Beitrag {{action}} wird.',
+    subject_warning: 'Erinnerung: Es gibt neue Antworten auf deinen Beitrag',
+    reply_post: 'Hallo {{author}},\n\ndein Beitrag wurde {{action}}, da du nicht innerhalb von {{x}} Minuten auf Kommentare geantwortet hast.\n\nBei Fragen wende dich bitte an die Modmail.',
+    subject_reply: 'Beitrag moderiert: Keine Rückmeldung des Erstellers',
+    mod_note_reply: 'OP Reply Enforcer: OP hat nicht innerhalb der Frist auf Kommentare geantwortet.',
+    manual_watch_comment: 'Hallo {{op}},\n\ndu wurdest von den Moderatoren gebeten, innerhalb von {{minutes}} Minuten auf diesen Kommentar zu antworten.',
+    manual_watch_note: 'OP hat nicht innerhalb von {{minutes}} Minuten auf den Kommentar geantwortet.'
   },
   es: {
-    empty_post: "Hola {{author}}.\n\nTu publicación ha sido {{action}} porque no recibió ninguna respuesta de la comunidad en el plazo de {{x}} minutos.\n\nSi tienes alguna pregunta, por favor contáctanos vía Modmail.",
-    reply_post: "Hola {{author}}.\n\nTu publicación ha sido {{action}} porque no respondiste a ningún comentario en el plazo de {{x}} minutos requerido por este subreddit.\n\nSi tienes alguna pregunta, por favor contáctanos vía Modmail.",
-    warning_post: "Hola {{author}}.\n\n¡Tu publicación ha recibido comentarios, pero aún no has respondido! Por favor, participa en la discusión dentro de los próximos {{xy}} minutos, de lo contrario tu publicación será {{action}}.",
-    action_flagged: "marcada (pero no se tomó ninguna acción)",
-    action_removed: "eliminada",
-    action_filtered: "filtrada a la cola de moderación",
-    mod_note_empty: "Acción automática: El tiempo de espera expiró y la publicación permaneció vacía.",
-    mod_note_reply: "Acción automática: El tiempo de espera expiró y el OP no respondió.",
-    subject_empty: "Acción tomada: Tu publicación no recibió respuesta de la comunidad",
-    subject_warning: "Acción requerida: Por favor responde a tu publicación",
-    subject_reply: "Acción tomada: No respondiste a tu publicación"
+    action_removed: 'eliminada',
+    action_filtered: 'enviada a la cola de moderación para revisión',
+    action_flagged: 'marcada',
+    empty_post: 'Hola {{author}},\n\ntu publicación no ha recibido comentarios de la comunidad en {{x}} minutos. Por lo tanto, ha sido {{action}}.\n\nSi tienes dudas, contacta al Modmail.',
+    subject_empty: 'Aviso sobre tu publicación en r/{{subreddit}}',
+    mod_note_empty: 'OP Reply Enforcer: Sin comentarios dentro del plazo.',
+    warning_post: 'Hola {{author}},\n\n¡Un miembro de la comunidad respondió a tu publicación! Por favor participa en la conversación. Te quedan {{xy}} minutos antes de que tu publicación sea {{action}}.',
+    subject_warning: 'Recordatorio: Han respondido a tu publicación',
+    reply_post: 'Hola {{author}},\n\ntu publicación fue {{action}} porque no respondiste a los comentarios en un plazo de {{x}} minutos.\n\nSi tienes dudas, contacta al Modmail.',
+    subject_reply: 'Publicación moderada: Sin respuesta del OP',
+    mod_note_reply: 'OP Reply Enforcer: El OP no respondió a tiempo.',
+    manual_watch_comment: 'Hola {{op}},\n\nlos moderadores te han solicitado responder a este comentario en un plazo de {{minutes}} minutos.',
+    manual_watch_note: 'El OP no respondió al comentario en el plazo de {{minutes}} minutos.'
   },
   fr: {
-    empty_post: "Bonjour {{author}}.\n\nVotre publication a été {{action}} car elle n'a reçu aucune réponse de la communauté dans le délai de {{x}} minutes.\n\nSi vous avez des questions, veuillez nous contacter via Modmail.",
-    reply_post: "Bonjour {{author}}.\n\nVotre publication a été {{action}} car vous n'avez répondu à aucun commentaire dans le délai de {{x}} minutes requis par ce subreddit.\n\nSi vous avez des questions, veuillez nous contacter via Modmail.",
-    warning_post: "Bonjour {{author}}.\n\nVotre publication a reçu des commentaires, mais vous n'y avez pas encore répondu ! Veuillez participer à la discussion dans les {{xy}} prochaines minutes, sinon votre publication sera {{action}}.",
-    action_flagged: "signalée (mais aucune action n'a été entreprise)",
-    action_removed: "supprimée",
-    action_filtered: "filtrée vers la file d'attente de modération",
-    mod_note_empty: "Action automatique : Le délai d'attente a expiré et la publication est restée vide.",
-    mod_note_reply: "Action automatique : Le délai d'attente a expiré et l'OP n'a pas répondu.",
-    subject_empty: "Action effectuée : Votre publication n'a reçu aucune réponse",
-    subject_warning: "Action requise : Veuillez répondre à votre publication",
-    subject_reply: "Action effectuée : Vous n'avez pas répondu à votre publication"
+    action_removed: 'supprimée',
+    action_filtered: 'placée en file de modération pour examen',
+    action_flagged: 'signalée',
+    empty_post: 'Bonjour {{author}},\n\nvotre publication n\'a reçu aucun commentaire dans un délai de {{x}} minutes. Par conséquent, elle a été {{action}}.\n\nPour toute question, contactez le Modmail.',
+    subject_empty: 'Notification concernant votre publication sur r/{{subreddit}}',
+    mod_note_empty: 'OP Reply Enforcer: Aucun commentaire dans le délai imparti.',
+    warning_post: 'Bonjour {{author}},\n\nun membre de la communauté a répondu à votre publication ! Merci de participer à la discussion. Il vous reste {{xy}} minutes avant que votre publication ne soit {{action}}.',
+    subject_warning: 'Rappel : Nouveau commentaire sur votre publication',
+    reply_post: 'Bonjour {{author}},\n\nvotre publication a été {{action}} car vous n\'avez pas répondu aux commentaires dans un délai de {{x}} minutes.\n\nPour toute question, contactez le Modmail.',
+    subject_reply: 'Action de modération : Pas de réponse de l\'OP',
+    mod_note_reply: 'OP Reply Enforcer: L\'OP n\'a pas répondu dans le délai imparti.',
+    manual_watch_comment: 'Bonjour {{op}},\n\nles modérateurs vous demandent de répondre à ce commentaire dans un délai de {{minutes}} minutes.',
+    manual_watch_note: 'L\'OP n\'a pas répondu au commentaire dans le délai de {{minutes}} minutes.'
   },
   pt: {
-    empty_post: "Olá {{author}}.\n\nSua publicação foi {{action}} porque não recebeu nenhuma resposta da comunidade no prazo de {{x}} minutos.\n\nSe você tiver alguma dúvida, entre em contato via Modmail.",
-    reply_post: "Olá {{author}}.\n\nSua publicação foi {{action}} porque você não respondeu a nenhum comentário dentro do prazo de {{x}} minutos exigido por este subreddit.\n\nSe você tiver alguma dúvida, entre em contato via Modmail.",
-    warning_post: "Olá {{author}}.\n\nSua publicação recebeu comentários, mas você ainda não respondeu! Por favor, participe da discussão nos próximos {{xy}} minutos, caso contrário sua publicação será {{action}}.",
-    action_flagged: "sinalizada (mas nenhuma ação foi tomada)",
-    action_removed: "removida",
-    action_filtered: "filtrada para a fila de moderação",
-    mod_note_empty: "Ação automática: O tempo de espera expirou e a publicação permaneceu vazia.",
-    mod_note_reply: "Ação automática: O tempo de espera expirou e o OP não respondeu.",
-    subject_empty: "Ação tomada: Sua publicação não recebeu resposta da comunidade",
-    subject_warning: "Ação necessária: Por favor, responda à sua publicação",
-    subject_reply: "Ação tomada: Você não respondeu à sua publicação"
+    action_removed: 'removida',
+    action_filtered: 'enviada para a fila de moderação para análise',
+    action_flagged: 'sinalizada',
+    empty_post: 'Olá {{author}},\n\nsua postagem não recebeu comentários da comunidade em {{x}} minutos. Como resultado, ela foi {{action}}.\n\nSe tiver dúvidas, entre em contato via Modmail.',
+    subject_empty: 'Notificação sobre sua postagem no r/{{subreddit}}',
+    mod_note_empty: 'OP Reply Enforcer: Sem comentários dentro do prazo.',
+    warning_post: 'Olá {{author}},\n\num membro da comunidade respondeu à sua postagem! Por favor, participe da discussão. Você tem {{xy}} minutos restantes antes que ela seja {{action}}.',
+    subject_warning: 'Lembrete: Responderam à sua postagem',
+    reply_post: 'Olá {{author}},\n\nsua postagem foi {{action}} porque você não respondeu aos comentários em até {{x}} minutos.\n\nSe tiver dúvidas, entre em contato via Modmail.',
+    subject_reply: 'Postagem moderada: Sem resposta do OP',
+    mod_note_reply: 'OP Reply Enforcer: O OP não respondeu dentro do prazo.',
+    manual_watch_comment: 'Olá {{op}},\n\nos moderadores solicitaram que você responda a este comentário em até {{minutes}} minutos.',
+    manual_watch_note: 'O OP não respondeu ao comentário no prazo de {{minutes}} minutos.'
   },
   it: {
-    empty_post: "Ciao {{author}}.\n\nIl tuo post è stato {{action}} perché non ha ricevuto alcuna risposta dalla community entro il limite di {{x}} minuti.\n\nSe hai domande, ti preghiamo di contattarci tramite Modmail.",
-    reply_post: "Ciao {{author}}.\n\nIl tuo post è stato {{action}} perché non hai risposto a nessun commento entro il limite di {{x}} minuti richiesto da questo subreddit.\n\nSe hai domande, ti preghiamo di contattarci tramite Modmail.",
-    warning_post: "Ciao {{author}}.\n\nIl tuo post ha ricevuto commenti, ma non hai ancora risposto! Ti preghiamo di partecipare alla discussione entro i prossimi {{xy}} minuti, altrimenti il tuo post verrà {{action}}.",
-    action_flagged: "segnalato (ma non è stata intrapresa alcuna azione)",
-    action_removed: "rimosso",
-    action_filtered: "filtrato nella coda di moderazione",
-    mod_note_empty: "Azione automatica: Il tempo di attesa è scaduto e il post è rimasto vuoto.",
-    mod_note_reply: "Azione automatica: Il tempo di attesa è scaduto e l'OP non ha risposto.",
-    subject_empty: "Azione intrapresa: Il tuo post non ha ricevuto risposta",
-    subject_warning: "Azione richiesta: Ti preghiamo di rispondere al tuo post",
-    subject_reply: "Azione intrapresa: Non hai risposto al tuo post"
+    action_removed: 'rimosso',
+    action_filtered: 'inviato alla coda di moderazione per la revisione',
+    action_flagged: 'segnalato',
+    empty_post: 'Ciao {{author}},\n\nil tuo post non ha ricevuto commenti entro {{x}} minuti. Di conseguenza, è stato {{action}}.\n\nIn caso di domande, contatta Modmail.',
+    subject_empty: 'Notifica relativa al tuo post su r/{{subreddit}}',
+    mod_note_empty: 'OP Reply Enforcer: Nessuna interazione entro il limite di tempo.',
+    warning_post: 'Ciao {{author}},\n\nun membro della community ha risposto al tuo post! Partecipa alla discussione. Ti rimangono {{xy}} minuti prima che il post venga {{action}}.',
+    subject_warning: 'Promemoria: Hanno risposto al tuo post',
+    reply_post: 'Ciao {{author}},\n\nil tuo post è stato {{action}} perché non hai risposto ai commenti entro {{x}} minuti.\n\nIn caso di domande, contatta Modmail.',
+    subject_reply: 'Post moderato: Nessuna risposta dall\'OP',
+    mod_note_reply: 'OP Reply Enforcer: L\'OP non ha risposto entro il tempo limite.',
+    manual_watch_comment: 'Ciao {{op}},\n\ni moderatori ti hanno richiesto di rispondere a questo commento entro {{minutes}} minuti.',
+    manual_watch_note: 'L\'OP non ha risposto al commento entro il termine di {{minutes}} minuti.'
   },
   nl: {
-    empty_post: "Hallo {{author}}.\n\nJe bericht is {{action}} omdat het binnen de tijdslimiet van {{x}} minuten geen reacties vanuit de community heeft ontvangen.\n\nAls je vragen hebt, neem dan contact op via Modmail.",
-    reply_post: "Hallo {{author}}.\n\nJe bericht is {{action}} omdat je niet binnen de door deze subreddit vereiste tijdslimiet van {{x}} minuten op reacties hebt geantwoord.\n\nAls je vragen hebt, neem dan contact op via Modmail.",
-    warning_post: "Hallo {{author}}.\n\nJe bericht heeft reacties gekregen, maar je hebt nog niet geantwoord! Neem binnen de komende {{xy}} minuten deel aan de discussie, anders wordt je bericht {{action}}.",
-    action_flagged: "gemarkeerd (maar er is geen actie ondernomen)",
-    action_removed: "verwijderd",
-    action_filtered: "gefilterd naar de modqueue",
-    mod_note_empty: "Automatische actie: Wachttijd verstreken en bericht bleef leeg.",
-    mod_note_reply: "Automatische actie: Wachttijd verstreken en OP heeft niet geantwoord.",
-    subject_empty: "Actie ondernomen: Je bericht ontving geen reactie van de community",
-    subject_warning: "Actie vereist: Reageer op je bericht",
-    subject_reply: "Actie ondernomen: Je hebt niet gereageerd op je bericht"
+    action_removed: 'verwijderd',
+    action_filtered: 'naar de modqueue gestuurd ter beoordeling',
+    action_flagged: 'gemarkeerd',
+    empty_post: 'Hallo {{author}},\n\nje bericht heeft binnen {{x}} minuten geen reacties ontvangen. Daarom is het {{action}}.\n\nNeem bij vragen contact op via Modmail.',
+    subject_empty: 'Melding over je bericht op r/{{subreddit}}',
+    mod_note_empty: 'OP Reply Enforcer: Geen interactie binnen het tijdsbestek.',
+    warning_post: 'Hallo {{author}},\n\neen lid van de community heeft gereageerd op je bericht! Neem deel aan het gesprek. Je hebt nog {{xy}} minuten voordat je bericht wordt {{action}}.',
+    subject_warning: 'Herinnering: Er is gereageerd op je bericht',
+    reply_post: 'Hallo {{author}},\n\nje bericht is {{action}} omdat je niet binnen {{x}} minuten op reacties hebt gereageerd.\n\nNeem bij vragen contact op via Modmail.',
+    subject_reply: 'Bericht gemodereerd: Geen reactie van OP',
+    mod_note_reply: 'OP Reply Enforcer: OP heeft niet tijdig gereageerd.',
+    manual_watch_comment: 'Hallo {{op}},\n\nje bent door de moderators verzocht om binnen {{minutes}} minuten op deze opmerking te reageren.',
+    manual_watch_note: 'OP heeft niet binnen {{minutes}} minuten gereageerd op de opmerking.'
   }
 };

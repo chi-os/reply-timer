@@ -23,13 +23,6 @@ export const appSettings: SettingsFormField[] = [
         defaultValue: ['en']
       },
       {
-        name: 'auto_archive_modmails',
-        type: 'boolean',
-        label: 'Auto-Archive Sent Modmails',
-        helpText: 'If enabled, any Modmail sent automatically by this app will be instantly archived.',
-        defaultValue: false
-      },
-      {
         name: 'ignored_flairs',
         type: 'string',
         label: 'Ignored Post Flairs (Comma separated)',
@@ -140,6 +133,13 @@ export const appSettings: SettingsFormField[] = [
         defaultValue: 60
       },
       {
+        name: 'min_op_comment_length',
+        type: 'number',
+        label: 'Minimum OP Reply Length (Characters)',
+        helpText: 'Replies from OP with fewer characters than this will be ignored (e.g. simple "Thanks"). Set to 0 to disable.',
+        defaultValue: 0
+      },
+      {
         name: 'reply_action',
         type: 'select',
         label: 'Action if OP fails to reply',
@@ -212,6 +212,19 @@ export const appSettings: SettingsFormField[] = [
         type: 'paragraph',
         label: 'Custom Notification Text (Warning)',
         helpText: 'Placeholders: {{author}}, {{action}}, {{xy}} (Remaining minutes).',
+        defaultValue: ''
+      }
+    ]
+  },
+  {
+    type: 'group',
+    label: '4. Manual Comment Watchdog',
+    fields: [
+      {
+        name: 'manual_watch_default_text',
+        type: 'paragraph',
+        label: 'Subreddit Default Comment Text (OP Ping)',
+        helpText: 'LEAVE EMPTY to use the built-in translated text (App Language). Entering text here sets a subreddit-wide default, which can still be individually overridden in the pop-up form when triggering the watchdog. Placeholders: {{op}}, {{minutes}}, {{commenter}}.',
         defaultValue: ''
       }
     ]

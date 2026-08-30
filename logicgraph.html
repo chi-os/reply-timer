@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OP Reply Enforcer - 3-Stage Flowchart</title>
+    <title>OP Reply Enforcer - Unified v3.0 Flowchart</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8f9fa; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
-        .mermaid-container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 1400px; width: 100%; overflow-x: auto; }
+        .mermaid-container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 1600px; width: 100%; overflow-x: auto; }
+        h1 { margin-bottom: 5px; color: #2c3e50; }
+        p { color: #7f8c8d; margin-top: 0; }
     </style>
 </head>
 <body>
-    <h1>OP Reply Enforcer (reply-timer) v0.1.0</h1>
-    <p>3-Stage Cascading Timer System & State Machine</p>
+    <h1>OP Reply Enforcer (reply-timer) v3.0</h1>
+    <p>Unified Logic Graph: Cascading Timers, Safety Nets & Manual Mod Watchdog</p>
     <div class="mermaid-container">
         <div class="mermaid">
         graph TD
@@ -20,33 +22,72 @@
             classDef check fill:#f39c12,stroke:#d35400,stroke-width:2px,color:#fff,rx:5px,ry:5px;
             classDef action fill:#2980b9,stroke:#2574a9,stroke-width:2px,color:#fff,rx:5px,ry:5px;
             classDef db fill:#8e44ad,stroke:#71368a,stroke-width:2px,color:#fff,rx:5px,ry:5px;
+            classDef manual fill:#16a085,stroke:#117a65,stroke-width:2px,color:#fff,rx:5px,ry:5px;
 
-            subgraph T1 ["Trigger 1: New Post Created"]
-                P1["Event: PostSubmit"]:::trigger --> P2[("Write state 'waiting' (Always)")]:::db
-                P2 --> P3{"Is Timer 1 enabled?"}:::check
-                P3 -- "Yes" --> P4[("Start Timer 1 'empty'")]:::db
-                P3 -- "No" --> P5["Wait silently"]
+            %% Phase 1: Post Submission & Timer 1
+            subgraph P ["Phase 1: Post Submission"]
+                P1["Event: PostSubmit"]:::trigger --> P2{"Meets Exceptions?<br/>- Mod/Approved<br/>- Flairs/Karma"}:::check
+                P2 -- "Yes" --> P3["Ignore Post"]
+                P2 -- "No" --> P4[("Write state 'waiting'<br/>Redis: state:{postId}")]:::db
+                P4 --> P5{"Is Timer 1 enabled?"}:::check
+                P5 -- "Yes" --> P6[("Start Timer 1 'empty'<br/>Job: delayed-action")]:::db
+                P5 -- "No" --> P7["Track state only"]
             end
 
-            subgraph T2 ["Trigger 2: Someone Comments"]
+            %% Phase 2: Comment Activity & State Machine
+            subgraph C ["Phase 2: Comment Interception"]
                 C1["Event: CommentCreate"]:::trigger --> C2{"Is author OP?"}:::check
-                C2 -- "Yes" --> C3[("Cancel ALL active timers & delete state")]:::db
-                C2 -- "No (Community)" --> C4{"Is state 'waiting'?"}:::check
-                C4 -- "Yes" --> C5[("Cancel Timer 1 (if active) & update state")]:::db
-                C5 --> C6{"Is Warning Timer enabled?"}:::check
-                C6 -- "Yes" --> C7[("Start Timer 2 'warning'")]:::db
-                C5 --> C8{"Is Final Timer enabled?"}:::check
-                C8 -- "Yes" --> C9[("Start Timer 3 'reply_final'")]:::db
+                
+                %% OP Branch
+                C2 -- "Yes" --> C3{"Meets min_op_comment_length?"}:::check
+                C3 -- "No" --> C4["Ignore Low-Effort Reply<br/>(Keep Timers Running)"]
+                C3 -- "Yes" --> C5[("Cancel ALL Timers & Clear State<br/>Redis: Del state, timers")]:::db
+                C5 --> C6(["Post & Thread Safe"])
+
+                %% Community Branch
+                C2 -- "No (Community)" --> C7{"Is comment deleted / filtered / removed?"}:::check
+                C7 -- "Yes" --> C8["Ignore Invisible Comment"]
+                C7 -- "No" --> C9{{"Current State in Redis?"}}:::check
+                
+                %% From 'waiting' to 'community_replied'
+                C9 -- "'waiting'" --> C10[("Update State to 'community_replied'<br/>Cancel Timer 1 'empty'")]:::db
+                C10 --> C11{"Is Warning Timer enabled?"}:::check
+                C11 -- "Yes" --> C12[("Start Timer 2 'reply_warning'")]:::db
+                C10 --> C13{"Is Final Timer enabled?"}:::check
+                C13 -- "Yes" --> C14[("Start Timer 3 'reply_final'")]:::db
+                
+                %% If already replied or in progress
+                C9 -- "'community_replied' / Other" --> C15["Continue Thread Monitoring"]
             end
 
-            T1 ~~~ T2
-
-            subgraph S ["Scheduler: Alarm Rings"]
-                S1["Event: delayed-action"]:::trigger --> S2{"Which timer type?"}:::check
-                S2 -- "empty" --> S3["Execute Scenario A & Notify ({{x}})"]:::action
-                S2 -- "reply_warning" --> S4["Send Warning Notification ({{xy}})"]:::action
-                S2 -- "reply_final" --> S5["Execute Scenario B & Notify ({{x}})"]:::action
+            %% Phase 3: Alarm Rings (Scheduler)
+            subgraph S ["Phase 3: Scheduler Execution"]
+                S1["Event: delayed-action (Alarm Rings)"]:::trigger --> S2{{"Check timerType in Event Data"}}:::check
+                
+                S2 -- "empty" --> S3["Execute Scenario A Action<br/>(remove / filter / none) & Notify"]:::action
+                
+                S2 -- "reply_warning" --> S4["Send Warning Notification<br/>(Includes calculated {{xy}})"]:::action
+                
+                S2 -- "reply_final" --> S5{{"Ghost Protection Check:<br/>Are any visible community comments left?"}}:::check
+                S5 -- "No" --> S6[("Reset State to 'waiting'<br/>(OP cannot reply to empty space)")]:::db
+                S5 -- "Yes" --> S7["Execute Scenario B Action<br/>(remove / filter / none) & Notify"]:::action
             end
+
+            %% Phase 4: Manual Mod Override
+            subgraph M ["Phase 4: Manual Mod Watchdog (On-Demand)"]
+                M1["Mod clicks 'Enforce OP Reply' on comment"]:::manual --> M2["Open Popup Form<br/>- Minutes, Action, Custom Text"]:::manual
+                M2 --> M3[("Submit Form & Save to Redis<br/>Redis: watch:comment:{id}")]:::db
+                M3 --> M4["Post Distinguished Bot Reply<br/>(Forces Ping u/OP)"]:::action
+                M4 --> M5[("Start Manual Watchdog Timer")]:::db
+                M5 --> M6{"OP Replies to Comment Thread?"}:::check
+                M6 -- "Yes" --> M7[("Cancel Manual Timer & Clear Keys")]:::db
+                M6 -- "Timeout Expired" --> M8["Execute Selected Action<br/>(remove_post / filter_post / etc.)"]:::action
+            end
+
+            %% Connections between Subgraphs
+            P6 -.->|Timer 1 Fires| S1
+            P14 -.->|Timer 3 Fires| S1
+            C10 -.->|Cancels Job ID| P6
         </div>
     </div>
     <script>mermaid.initialize({ startOnLoad: true, theme: 'base' });</script>
