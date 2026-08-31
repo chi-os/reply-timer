@@ -30,7 +30,7 @@
     "devvit": "0.14.1",
     "eslint": "10.9.0",
     "globals": "17.11.0",
-    "prettier": "3.8.4",
+    "prettier": "3.9.6",
     "typescript": "^5.8.0",
     "typescript-eslint": "8.61.1",
     "vite": "^8.2.2"
