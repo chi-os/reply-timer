@@ -9,7 +9,6 @@ Devvit.configure({
 
 Devvit.addSettings(appSettings);
 
-// Typsicherer Fallback für Übersetzungen (verhindert TS18048)
 function getTranslation(lang: string): TranslationStrings {
   return translations[lang] ?? translations['en']!;
 }
@@ -81,7 +80,6 @@ const commentWatchForm = Devvit.createForm(
       const lang = langArray[0] ?? 'en';
       const t = getTranslation(lang);
 
-      // Textauflösung: Formulardaten -> Subreddit-Settings -> i18n
       let text = customText || settingsDefaultText || t.manual_watch_comment;
 
       text = text
@@ -284,10 +282,12 @@ Devvit.addSchedulerJob({
       let rawSubject = '';
       let waitTime = 60;
       let modNoteText = '';
+      let autoArchive = false;
 
       if (timerType === 'empty') {
         selectedAction = ((settings.empty_action as string[]) ?? [])[0] ?? 'none';
         notificationType = ((settings.empty_notification_type as string[]) ?? [])[0] ?? 'none';
+        autoArchive = (settings.empty_auto_archive_modmail as boolean) ?? false;
         rawNotificationText = (settings.empty_notification_text as string)?.trim() || t.empty_post;
         rawSubject = (settings.empty_subject as string)?.trim() || t.subject_empty;
         waitTime = (settings.empty_wait_time_minutes as number) ?? 60;
@@ -297,6 +297,7 @@ Devvit.addSchedulerJob({
       } else if (timerType === 'reply_final') {
         selectedAction = ((settings.reply_action as string[]) ?? [])[0] ?? 'remove';
         notificationType = ((settings.reply_notification_type as string[]) ?? [])[0] ?? 'none';
+        autoArchive = (settings.reply_auto_archive_modmail as boolean) ?? false;
         rawNotificationText = (settings.reply_notification_text as string)?.trim() || t.reply_post;
         rawSubject = (settings.reply_subject as string)?.trim() || t.subject_reply;
         waitTime = (settings.reply_wait_time_minutes as number) ?? 60;
@@ -306,6 +307,7 @@ Devvit.addSchedulerJob({
       } else if (timerType === 'reply_warning') {
         selectedAction = ((settings.reply_action as string[]) ?? [])[0] ?? 'remove'; 
         notificationType = ((settings.warning_notification_type as string[]) ?? [])[0] ?? 'none';
+        autoArchive = (settings.warning_auto_archive_modmail as boolean) ?? false;
         rawNotificationText = (settings.warning_notification_text as string)?.trim() || t.warning_post;
         rawSubject = (settings.warning_subject as string)?.trim() || t.subject_warning;
         console.log(`⏰ [Timer 2] WARNING for post ${postId}.`);
@@ -345,7 +347,8 @@ Devvit.addSchedulerJob({
           to: post.authorName,
           subject: rawSubject,
           body: formattedNotificationText,
-          isAuthorHidden: true
+          isAuthorHidden: true,
+          isArchived: autoArchive
         });
       }
 

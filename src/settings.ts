@@ -101,6 +101,13 @@ export const appSettings: SettingsFormField[] = [
         defaultValue: ['none']
       },
       {
+        name: 'empty_auto_archive_modmail',
+        type: 'boolean',
+        label: 'Auto-archive Modmail (Empty Post)',
+        helpText: 'Automatically archive the Modmail conversation after sending.',
+        defaultValue: false
+      },
+      {
         name: 'empty_subject',
         type: 'string',
         label: 'Custom Modmail Subject (Empty Post)',
@@ -164,6 +171,13 @@ export const appSettings: SettingsFormField[] = [
         defaultValue: ['none']
       },
       {
+        name: 'reply_auto_archive_modmail',
+        type: 'boolean',
+        label: 'Auto-archive Modmail (Final Action)',
+        helpText: 'Automatically archive the Modmail conversation after sending.',
+        defaultValue: false
+      },
+      {
         name: 'reply_subject',
         type: 'string',
         label: 'Custom Modmail Subject (Final Action)',
@@ -200,6 +214,13 @@ export const appSettings: SettingsFormField[] = [
         ],
         multiSelect: false,
         defaultValue: ['none']
+      },
+      {
+        name: 'warning_auto_archive_modmail',
+        type: 'boolean',
+        label: 'Auto-archive Modmail (Warning)',
+        helpText: 'Automatically archive the Modmail conversation after sending.',
+        defaultValue: false
       },
       {
         name: 'warning_subject',

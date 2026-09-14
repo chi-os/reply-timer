@@ -126,6 +126,11 @@ Settings are fully integrated into Reddit's native Mod Tools (Mod Tools -> Apps 
 4. Manual Comment Watchdog: Subreddit-wide default notification text for moderator-initiated comment watches.
 
 # Changelog
+
+**3.1.0**
+
+* Added autoarchive for modmail
+
 **3.0.0**
 
 * Added Manual Comment Watchdog: Enforce OP replies to specific comments directly via the mod context menu (...).
