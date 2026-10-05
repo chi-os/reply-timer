@@ -127,6 +127,10 @@ Settings are fully integrated into Reddit's native Mod Tools (Mod Tools -> Apps 
 
 # Changelog
 
+**3.1.1**
+
+* updated devvit
+
 **3.1.0**
 
 * Added autoarchive for modmail
